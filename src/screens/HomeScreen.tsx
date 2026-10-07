@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-
 import {
     Image,
     Pressable,
@@ -13,13 +12,20 @@ import { colors } from "../theme";
 import mlbbLogo from "../assets/images/mlbb-logo.png";
 
 const introVideo = "/src/assets/intro.mp4";
-export default function HomeScreen() {
+
+// Define props interface for HomeScreen navigation handling
+interface HomeScreenProps {
+    onExplorePress?: () => void;
+}
+
+export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
     const { width } = useWindowDimensions();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [muted, setMuted] = useState(true);
 
     const mobile = width < 700;
 
+    // Toggle video audio state between muted and unmuted
     const toggleSound = () => {
         const video = videoRef.current;
         if (!video) return;
@@ -39,7 +45,7 @@ export default function HomeScreen() {
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
         >
-            {/* Header */}
+            {/* Header Section with Logo and Navigation links */}
             <View style={[styles.header, mobile && styles.headerMobile]}>
                 <Image
                     source={mlbbLogo}
@@ -52,13 +58,14 @@ export default function HomeScreen() {
                         <Text style={[styles.navItem, styles.activeNav]}>HOME</Text>
                     </Pressable>
 
-                    <Pressable>
+                    {/* Nav link to trigger heroes screen view */}
+                    <Pressable onPress={onExplorePress}>
                         <Text style={styles.navItem}>HEROES</Text>
                     </Pressable>
                 </View>
             </View>
 
-            {/* Hero Introduction */}
+            {/* Hero Introduction Banner */}
             <View style={[styles.intro, mobile && styles.introMobile]}>
                 <View style={styles.glow} />
 
@@ -73,12 +80,13 @@ export default function HomeScreen() {
                     the Land of Dawn.
                 </Text>
 
-                <Pressable style={styles.exploreButton}>
+                {/* Button linked to navigate to Heroes library */}
+                <Pressable style={styles.exploreButton} onPress={onExplorePress}>
                     <Text style={styles.exploreText}>EXPLORE HEROES</Text>
                 </Pressable>
             </View>
 
-            {/* Trailer */}
+            {/* Cinematic Trailer Section */}
             <View style={styles.videoSection}>
                 <View style={[styles.videoHeader, mobile && styles.videoHeaderMobile]}>
                     <View style={styles.videoHeading}>
@@ -116,7 +124,7 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* Information */}
+            {/* Information and Features Section */}
             <View style={[styles.infoSection, mobile && styles.infoMobile]}>
                 <Text style={styles.sectionLabel}>HERO KNOWLEDGE</Text>
 
@@ -150,6 +158,7 @@ export default function HomeScreen() {
     );
 }
 
+// Reusable Feature Card Component
 function Feature({
     title,
     text,
