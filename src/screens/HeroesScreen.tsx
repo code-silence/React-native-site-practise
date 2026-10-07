@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
+  Image,
+  ImageBackground,
   StyleSheet,
   FlatList,
   TextInput,
@@ -12,6 +14,10 @@ import {
 
 import { colors } from '../theme';
 import { HEROES_DATA, ROLES, type Hero } from '../data/heroes';
+import { HERO_ASSETS } from '../data/heroAssets';
+
+//covers
+import melissaCover from '../assets/skills/melissa/melissa_cover.jpg';
 
 interface HeroesScreenProps {
   onBackToHome?: () => void;
@@ -34,14 +40,17 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
 
   // Render Hero Detail View styled exactly like official MLBB UI
   if (selectedHero) {
-    const activeSkill = selectedHero.skills[selectedSkillIndex] || selectedHero.skills[0];
+    const activeSkill =
+      selectedHero.skills[selectedSkillIndex] || selectedHero.skills[0];
 
+    const heroAssets =
+      HERO_ASSETS[selectedHero.name as keyof typeof HERO_ASSETS];
     return (
       <View style={styles.fullScreenContainer}>
         {/* Top header navigation back bar */}
         <View style={styles.detailHeaderBar}>
-          <TouchableOpacity 
-            style={styles.backButton} 
+          <TouchableOpacity
+            style={styles.backButton}
             onPress={() => setSelectedHero(null)}
           >
             <Text style={styles.backButtonText}>← Back to Heroes</Text>
@@ -65,33 +74,72 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.mainLayout}>
-            
+
             {/* Left Column: Hero Portrait Avatar & Analytics Info */}
             <View style={styles.heroProfileSection}>
-              <View style={styles.heroAvatarBox}>
-                <Text style={styles.avatarInitial}>{selectedHero.name[0]}</Text>
-              </View>
-              <Text style={styles.heroDetailName}>{selectedHero.name}</Text>
-              <Text style={styles.heroDetailRole}>{selectedHero.role}</Text>
+              <ImageBackground
+                source={melissaCover}
+                style={styles.heroCoverBackground}
+                imageStyle={styles.heroCoverImage}
+                resizeMode="cover"
+              >
+                {/* Dark overlay for text readability */}
+                <View style={styles.heroCoverOverlay} />
 
-              <View style={styles.statsRow}>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{selectedHero.winRate}</Text>
-                  <Text style={styles.statLabel}>Win Rate</Text>
-                </View>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{selectedHero.pickRate}</Text>
-                  <Text style={styles.statLabel}>Pick Rate</Text>
-                </View>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{selectedHero.banRate}</Text>
-                  <Text style={styles.statLabel}>Ban Rate</Text>
-                </View>
-              </View>
+                {/* Hero content */}
+                <View style={styles.heroProfileContent}>
+                  <View style={styles.heroAvatarBox}>
+                    {heroAssets?.icon ? (
+                      <Image
+                        source={heroAssets.icon}
+                        style={styles.heroAvatarImage}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Text style={styles.avatarInitial}>
+                        {selectedHero.name[0]}
+                      </Text>
+                    )}
+                  </View>
 
-              <View style={styles.loreBox}>
-                <Text style={styles.loreText}>{selectedHero.lore}</Text>
-              </View>
+                  <Text style={styles.heroDetailName}>
+                    {selectedHero.name}
+                  </Text>
+
+                  <Text style={styles.heroDetailRole}>
+                    {selectedHero.role}
+                  </Text>
+
+                  <View style={styles.statsRow}>
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>
+                        {selectedHero.winRate}
+                      </Text>
+                      <Text style={styles.statLabel}>Win Rate</Text>
+                    </View>
+
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>
+                        {selectedHero.pickRate}
+                      </Text>
+                      <Text style={styles.statLabel}>Pick Rate</Text>
+                    </View>
+
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>
+                        {selectedHero.banRate}
+                      </Text>
+                      <Text style={styles.statLabel}>Ban Rate</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.loreBox}>
+                    <Text style={styles.loreText}>
+                      {selectedHero.lore}
+                    </Text>
+                  </View>
+                </View>
+              </ImageBackground>
             </View>
 
             {/* Right Column: Skills, Priority, and Combo details view */}
@@ -105,13 +153,22 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
                         key={skill.id}
                         style={[
                           styles.skillIconButton,
-                          selectedSkillIndex === index && styles.activeSkillIconButton,
+                          selectedSkillIndex === index &&
+                          styles.activeSkillIconButton,
                         ]}
                         onPress={() => setSelectedSkillIndex(index)}
                       >
-                        <Text style={styles.skillIconText}>
-                          {index === 3 ? 'Ultimate' : `S${index + 1}`}
-                        </Text>
+                        {heroAssets?.skills[index] ? (
+                          <Image
+                            source={heroAssets.skills[index]}
+                            style={styles.skillIconImage}
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <Text style={styles.skillIconText}>
+                            {index === 3 ? 'Ultimate' : `S${index + 1}`}
+                          </Text>
+                        )}
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -146,7 +203,7 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
                   <View style={styles.comboCardContainer}>
                     <Text style={styles.sectionHeaderTitle}>Skill Combo</Text>
                     <View style={styles.dividerLine} />
-                    
+
                     <Text style={styles.comboSubHeader}>TEAMFIGHT COMBOS</Text>
                     <Text style={styles.sectionContentText}>
                       {selectedHero.teamfightCombo}
@@ -226,8 +283,8 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
         data={filteredHeroes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity 
-            style={styles.heroCard} 
+          <TouchableOpacity
+            style={styles.heroCard}
             activeOpacity={0.8}
             onPress={() => {
               setSelectedHero(item);
@@ -235,7 +292,15 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
             }}
           >
             <View style={styles.heroAvatarPlaceholder}>
-              <Text style={styles.heroAvatarText}>{item.name[0]}</Text>
+              {HERO_ASSETS[item.name as keyof typeof HERO_ASSETS]?.icon ? (
+                <Image
+                  source={HERO_ASSETS[item.name as keyof typeof HERO_ASSETS].icon}
+                  style={styles.heroAvatarImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Text style={styles.heroAvatarText}>{item.name[0]}</Text>
+              )}
             </View>
             <View style={styles.heroInfo}>
               <Text style={styles.heroName}>{item.name}</Text>
@@ -570,14 +635,15 @@ const styles = StyleSheet.create({
   },
 
   skillIconButton: {
-    paddingHorizontal: 16,
-    height: 45,
-    borderRadius: 22,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: colors.surfaceBlue,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.borderBlue,
+    overflow: 'hidden',
   },
 
   activeSkillIconButton: {
@@ -681,5 +747,47 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: colors.textSecondary,
     fontSize: 13,
+  },
+
+  skillIconImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 22,
+  },
+
+  heroAvatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 25,
+  },
+
+  heroCoverBackground: {
+    width: '100%',
+    minHeight: 420,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+
+  heroCoverImage: {
+    borderRadius: 12,
+  },
+
+  heroCoverOverlay: {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  backgroundColor: 'rgba(8, 19, 38, 0.62)',
+},
+
+  heroProfileContent: {
+    position: 'relative',
+    zIndex: 1,
+    flex: 1,
+    padding: 14,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });
