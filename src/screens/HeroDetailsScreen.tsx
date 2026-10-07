@@ -7,13 +7,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import { colors } from '../theme';
+import { MOCK_SKILLS, type Skill } from '../data/skills';
 
-interface Skill {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-}
 
 interface HeroDetailProps {
   heroName?: string;
@@ -23,33 +19,6 @@ interface HeroDetailProps {
   banRate?: string;
   description?: string;
 }
-
-const MOCK_SKILLS: Skill[] = [
-  {
-    id: '1',
-    name: 'Nether Touch',
-    type: 'Damage / Passive',
-    description: 'Vexana and her Eternal Guard inflict Nether Touch on enemies hit. The mark lasts 5s and causes the affected enemy to explode upon death.',
-  },
-  {
-    id: '2',
-    name: 'Deathly Grasp',
-    type: 'Crowd Control',
-    description: 'Vexana unleashes spectral energy in a designated direction, dealing Magic Damage and pulling enemies to the center.',
-  },
-  {
-    id: '3',
-    name: 'Cursed Blast',
-    type: 'Area Damage',
-    description: 'Summons a curse power in a target area, dealing massive burst Magic Damage after a short delay.',
-  },
-  {
-    id: '4',
-    name: 'Eternal Guard',
-    type: 'Ultimate / Summon',
-    description: 'Summons the Eternal Guard at a target location to strike down enemies and knock them airborne.',
-  },
-];
 
 export default function HeroDetailScreen(props: HeroDetailProps) {
   const [activeTab, setActiveTab] = useState<'SKILLS' | 'COUNTERS' | 'GUIDES' | 'WALLPAPER'>('SKILLS');
@@ -158,80 +127,92 @@ export default function HeroDetailScreen(props: HeroDetailProps) {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#070b19',
+    backgroundColor: colors.background,
   },
+
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#0d1428',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#1b264a',
+    borderBottomColor: colors.borderBlue,
   },
+
   tabItem: {
     flex: 1,
     paddingVertical: 14,
     alignItems: 'center',
   },
+
   activeTabItem: {
     borderBottomWidth: 3,
-    borderBottomColor: '#3b82f6',
-    backgroundColor: '#111c38',
+    borderBottomColor: colors.blue,
+    backgroundColor: colors.surfaceBlue,
   },
+
   tabText: {
-    color: '#8b9bb4',
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: 'bold',
     letterSpacing: 1,
   },
+
   activeTabText: {
-    color: '#ffffff',
+    color: colors.white,
   },
+
   contentContainer: {
     padding: 16,
   },
+
   mainLayout: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 16,
   },
+
   heroProfileSection: {
     width: '30%',
-    backgroundColor: '#0d1428',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#1b264a',
+    borderColor: colors.borderBlue,
   },
+
   heroAvatarBox: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#1e3a8a',
+    backgroundColor: colors.blueDark,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
     borderWidth: 2,
-    borderColor: '#3b82f6',
+    borderColor: colors.blue,
   },
+
   avatarInitial: {
     fontSize: 36,
-    color: '#ffffff',
+    color: colors.white,
     fontWeight: 'bold',
   },
+
   heroName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: colors.white,
   },
+
   heroRole: {
     fontSize: 14,
-    color: '#60a5fa',
+    color: colors.blueLight,
     marginBottom: 16,
   },
+
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -239,122 +220,143 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#1b264a',
+    borderColor: colors.borderBlue,
     paddingVertical: 10,
   },
+
   statItem: {
     alignItems: 'center',
     flex: 1,
   },
+
   statValue: {
     fontSize: 12,
-    color: '#34d399',
+    color: colors.success,
     fontWeight: 'bold',
   },
+
   statLabel: {
     fontSize: 10,
-    color: '#8b9bb4',
+    color: colors.textSecondary,
     marginTop: 2,
   },
+
   loreBox: {
-    backgroundColor: '#070b19',
+    backgroundColor: colors.darkBackground,
     padding: 10,
     borderRadius: 6,
     width: '100%',
   },
+
   loreText: {
     fontSize: 11,
-    color: '#8b9bb4',
+    color: colors.textSecondary,
     fontStyle: 'italic',
     textAlign: 'center',
   },
+
   detailsSection: {
     flex: 1,
-    backgroundColor: '#0d1428',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#1b264a',
+    borderColor: colors.borderBlue,
     minWidth: 300,
   },
+
   skillIconsRow: {
     flexDirection: 'row',
     gap: 12,
     marginBottom: 16,
   },
+
   skillIconButton: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#111c38',
+    backgroundColor: colors.surfaceBlue,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#1b264a',
+    borderColor: colors.borderBlue,
   },
+
   activeSkillIcon: {
-    borderColor: '#3b82f6',
-    backgroundColor: '#1e3a8a',
+    borderColor: colors.blue,
+    backgroundColor: colors.blueDark,
   },
+
   skillIconText: {
-    color: '#ffffff',
+    color: colors.white,
     fontWeight: 'bold',
     fontSize: 14,
   },
+
   skillInfoCard: {
-    backgroundColor: '#070b19',
+    backgroundColor: colors.darkBackground,
     padding: 14,
     borderRadius: 8,
     marginBottom: 16,
   },
+
   skillTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
     gap: 10,
   },
+
   skillName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: colors.white,
   },
+
   skillTypeBadge: {
-    backgroundColor: '#1e293b',
+    backgroundColor: colors.badge,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 4,
   },
+
   skillTypeText: {
     fontSize: 10,
-    color: '#38bdf8',
+    color: colors.skyBlue,
   },
+
   skillDescription: {
     fontSize: 13,
-    color: '#94a3b8',
+    color: colors.textBody,
     lineHeight: 20,
   },
+
   priorityBox: {
-    backgroundColor: '#070b19',
+    backgroundColor: colors.darkBackground,
     padding: 14,
     borderRadius: 8,
   },
+
   sectionHeaderTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: colors.white,
     marginBottom: 6,
   },
+
   priorityText: {
     fontSize: 12,
-    color: '#94a3b8',
+    color: colors.textBody,
     lineHeight: 18,
   },
+
   placeholderTabContent: {
     padding: 40,
     alignItems: 'center',
   },
+
   placeholderText: {
-    color: '#8b9bb4',
+    color: colors.textSecondary,
     fontSize: 14,
   },
 });
