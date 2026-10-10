@@ -15,17 +15,17 @@ import {
 import { colors } from '../theme';
 import { HEROES_DATA, ROLES, type Hero } from '../data/heroes';
 import { HERO_ASSETS } from '../data/heroAssets';
+import mlbbLogo from '../assets/images/mlbb-logo.png';
 
 //covers
 import melissaCover from '../assets/skills/melissa/melissa_cover.jpg';
 
 interface HeroesScreenProps {
-  onBackToHome?: () => void;
+  onHomePress?: () => void;
+  onHeroesPress?: () => void;
 }
 
-
-
-export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
+export default function HeroesScreen({ onHomePress, onHeroesPress }: HeroesScreenProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All');
   const [selectedHero, setSelectedHero] = useState<Hero | null>(null);
@@ -47,13 +47,32 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
       HERO_ASSETS[selectedHero.name as keyof typeof HERO_ASSETS];
     return (
       <View style={styles.fullScreenContainer}>
-        {/* Top header navigation back bar */}
+        {/* Header Navbar */}
+        <View style={styles.header}>
+          <Image
+            source={mlbbLogo}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+
+          <View style={styles.nav}>
+            <TouchableOpacity onPress={onHomePress}>
+              <Text style={styles.navItem}>HOME</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={onHeroesPress}>
+              <Text style={[styles.navItem, styles.activeNav]}>HEROES</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Top header navigation back bar to return to heroes list */}
         <View style={styles.detailHeaderBar}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => setSelectedHero(null)}
           >
-            <Text style={styles.backButtonText}>← Back to Heroes</Text>
+            <Text style={styles.backButtonText}>← Back to Heroes List</Text>
           </TouchableOpacity>
         </View>
 
@@ -228,16 +247,29 @@ export default function HeroesScreen({ onBackToHome }: HeroesScreenProps) {
     );
   }
 
-  // Render main Hero List View with search filters and categories
+  // Render main Hero List View with Navbar
   return (
     <View style={styles.fullScreenContainer}>
-      {onBackToHome && (
-        <TouchableOpacity style={styles.homeBackButton} onPress={onBackToHome}>
-          <Text style={styles.homeBackButtonText}>← Back to Home</Text>
-        </TouchableOpacity>
-      )}
-
+      {/* Header Navbar */}
       <View style={styles.header}>
+        <Image
+          source={mlbbLogo}
+          style={styles.logoImage}
+          resizeMode="contain"
+        />
+
+        <View style={styles.nav}>
+          <TouchableOpacity onPress={onHomePress}>
+            <Text style={styles.navItem}>HOME</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={onHeroesPress}>
+            <Text style={[styles.navItem, styles.activeNav]}>HEROES</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.libraryHeader}>
         <Text style={styles.headerTitle}>HERO LIBRARY</Text>
         <Text style={styles.headerSubtitle}>Choose your fighter for the Land of Dawn</Text>
       </View>
@@ -323,30 +355,47 @@ const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
     backgroundColor: colors.darkBackground,
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: 24,
+    paddingTop: 0,
     width: '100%',
     minHeight: '100vh',
   },
 
-  homeBackButton: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.surfaceLight,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 8,
-  },
-
-  homeBackButtonText: {
-    color: colors.blueLight,
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-
   header: {
+    height: 76,
+    marginHorizontal: -24,
+    paddingHorizontal: 48,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: colors.background,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(142,162,203,0.15)",
+    marginBottom: 20,
+  },
+
+  logoImage: {
+    width: 140,
+    height: 44,
+  },
+
+  nav: {
+    flexDirection: "row",
+    gap: 28,
+  },
+
+  navItem: {
+    color: colors.muted,
+    fontSize: 11,
+    fontWeight: "900",
+    letterSpacing: 1.4,
+  },
+
+  activeNav: {
+    color: colors.gold,
+  },
+
+  libraryHeader: {
     marginBottom: 16,
   },
 
@@ -774,13 +823,13 @@ const styles = StyleSheet.create({
   },
 
   heroCoverOverlay: {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  backgroundColor: 'rgba(8, 19, 38, 0.62)',
-},
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(8, 19, 38, 0.62)',
+  },
 
   heroProfileContent: {
     position: 'relative',

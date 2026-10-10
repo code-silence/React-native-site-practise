@@ -4,15 +4,21 @@ import HeroesScreen from "./src/screens/HeroesScreen";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<'HOME' | 'HEROES'>('HOME');
-  const handleExplorePress = () => setCurrentScreen('HEROES');
-
-  if (currentScreen === 'HEROES') {
-    return <HeroesScreen onBackToHome={() => setCurrentScreen('HOME')} />;
-  }
 
   return (
-    <HomeScreen
-      {...({ onExplorePress: handleExplorePress } as any)}
-    />
+    <>
+      {currentScreen === 'HEROES' ? (
+        <HeroesScreen 
+          onHomePress={() => setCurrentScreen('HOME')}
+          onHeroesPress={() => setCurrentScreen('HEROES')}
+        />
+      ) : (
+        <HomeScreen 
+          onExplorePress={() => setCurrentScreen('HEROES')}
+          onHomePress={() => setCurrentScreen('HOME')}
+          onHeroesPress={() => setCurrentScreen('HEROES')}
+        />
+      )}
+    </>
   );
 }

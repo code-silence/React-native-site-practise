@@ -13,19 +13,19 @@ import mlbbLogo from "../assets/images/mlbb-logo.png";
 
 const introVideo = "/src/assets/intro.mp4";
 
-// Define props interface for HomeScreen navigation handling
 interface HomeScreenProps {
     onExplorePress?: () => void;
+    onHomePress?: () => void;
+    onHeroesPress?: () => void;
 }
 
-export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
+export default function HomeScreen({ onExplorePress, onHomePress, onHeroesPress }: HomeScreenProps) {
     const { width } = useWindowDimensions();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [muted, setMuted] = useState(true);
 
     const mobile = width < 700;
 
-    // Toggle video audio state between muted and unmuted
     const toggleSound = () => {
         const video = videoRef.current;
         if (!video) return;
@@ -45,7 +45,7 @@ export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
         >
-            {/* Header Section with Logo and Navigation links */}
+            {/* Header Section */}
             <View style={[styles.header, mobile && styles.headerMobile]}>
                 <Image
                     source={mlbbLogo}
@@ -54,12 +54,11 @@ export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
                 />
 
                 <View style={styles.nav}>
-                    <Pressable>
+                    <Pressable onPress={onHomePress}>
                         <Text style={[styles.navItem, styles.activeNav]}>HOME</Text>
                     </Pressable>
 
-                    {/* Nav link to trigger heroes screen view */}
-                    <Pressable onPress={onExplorePress}>
+                    <Pressable onPress={onHeroesPress || onExplorePress}>
                         <Text style={styles.navItem}>HEROES</Text>
                     </Pressable>
                 </View>
@@ -80,8 +79,7 @@ export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
                     the Land of Dawn.
                 </Text>
 
-                {/* Button linked to navigate to Heroes library */}
-                <Pressable style={styles.exploreButton} onPress={onExplorePress}>
+                <Pressable style={styles.exploreButton} onPress={onExplorePress || onHeroesPress}>
                     <Text style={styles.exploreText}>EXPLORE HEROES</Text>
                 </Pressable>
             </View>
@@ -124,7 +122,7 @@ export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
                 </View>
             </View>
 
-            {/* Information and Features Section */}
+            {/* Information Section */}
             <View style={[styles.infoSection, mobile && styles.infoMobile]}>
                 <Text style={styles.sectionLabel}>HERO KNOWLEDGE</Text>
 
@@ -158,7 +156,6 @@ export default function HomeScreen({ onExplorePress }: HomeScreenProps) {
     );
 }
 
-// Reusable Feature Card Component
 function Feature({
     title,
     text,
@@ -182,11 +179,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
     },
-
     content: {
         paddingBottom: 80,
     },
-
     header: {
         height: 76,
         paddingHorizontal: 48,
@@ -197,33 +192,27 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "rgba(142,162,203,0.15)",
     },
-
     headerMobile: {
         height: 64,
         paddingHorizontal: 18,
     },
-
     logoImage: {
         width: 140,
         height: 44,
     },
-
     nav: {
         flexDirection: "row",
         gap: 28,
     },
-
     navItem: {
         color: colors.muted,
         fontSize: 11,
         fontWeight: "900",
         letterSpacing: 1.4,
     },
-
     activeNav: {
         color: colors.gold,
     },
-
     intro: {
         minHeight: 430,
         paddingHorizontal: 48,
@@ -232,13 +221,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         overflow: "hidden",
     },
-
     introMobile: {
         minHeight: 400,
         paddingHorizontal: 24,
         paddingVertical: 65,
     },
-
     glow: {
         position: "absolute",
         width: 420,
@@ -249,7 +236,6 @@ const styles = StyleSheet.create({
         top: -180,
         right: -100,
     },
-
     kicker: {
         color: colors.orange,
         fontSize: 11,
@@ -258,7 +244,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 16,
     },
-
     title: {
         color: colors.white,
         fontSize: 58,
@@ -267,12 +252,10 @@ const styles = StyleSheet.create({
         letterSpacing: 2,
         textAlign: "center",
     },
-
     titleMobile: {
         fontSize: 36,
         lineHeight: 42,
     },
-
     description: {
         maxWidth: 650,
         marginTop: 18,
@@ -281,7 +264,6 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         textAlign: "center",
     },
-
     exploreButton: {
         marginTop: 30,
         paddingHorizontal: 28,
@@ -289,14 +271,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: colors.blue,
     },
-
     exploreText: {
         color: colors.white,
         fontSize: 11,
         fontWeight: "900",
         letterSpacing: 1.2,
     },
-
     videoSection: {
         width: "100%",
         maxWidth: 1200,
@@ -304,7 +284,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 30,
     },
-
     videoHeader: {
         marginBottom: 18,
         flexDirection: "row",
@@ -312,23 +291,19 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         gap: 20,
     },
-
     videoHeaderMobile: {
         alignItems: "flex-start",
         flexDirection: "column",
     },
-
     videoHeading: {
         flex: 1,
     },
-
     sectionLabel: {
         color: colors.orange,
         fontSize: 10,
         fontWeight: "900",
         letterSpacing: 1.8,
     },
-
     sectionTitle: {
         marginTop: 6,
         color: colors.white,
@@ -336,11 +311,9 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         letterSpacing: 1,
     },
-
     mobileSectionTitle: {
         fontSize: 20,
     },
-
     soundButton: {
         paddingHorizontal: 14,
         paddingVertical: 10,
@@ -349,14 +322,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.accent,
     },
-
     soundText: {
         color: colors.white,
         fontSize: 10,
         fontWeight: "900",
         letterSpacing: 0.7,
     },
-
     videoWrapper: {
         width: "100%",
         aspectRatio: 16 / 9,
@@ -367,14 +338,12 @@ const styles = StyleSheet.create({
         borderColor: colors.accent,
         position: "relative",
     },
-
     videoBorder: {
         position: "absolute",
         inset: 0,
         borderWidth: 1,
         borderColor: "rgba(251,194,51,0.2)",
     },
-
     infoSection: {
         width: "100%",
         maxWidth: 1200,
@@ -382,11 +351,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingTop: 70,
     },
-
     infoMobile: {
         paddingTop: 45,
     },
-
     infoText: {
         maxWidth: 720,
         marginTop: 15,
@@ -394,14 +361,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 23,
     },
-
     featureRow: {
         marginTop: 38,
         flexDirection: "row",
         flexWrap: "wrap",
         gap: 16,
     },
-
     feature: {
         flex: 1,
         minWidth: 190,
@@ -411,21 +376,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgba(61,94,157,0.45)",
     },
-
     featureAccent: {
         width: 32,
         height: 3,
         marginBottom: 17,
         backgroundColor: colors.gold,
     },
-
     featureTitle: {
         color: colors.white,
         fontSize: 13,
         fontWeight: "900",
         letterSpacing: 1,
     },
-
     featureText: {
         marginTop: 8,
         color: colors.muted,
